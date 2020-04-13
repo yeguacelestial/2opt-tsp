@@ -33,7 +33,7 @@ def read_tour(filename):
                     pass
 
             return tour
-            
+
     except:
         print("[-] Couldn't read file.")
 
@@ -64,7 +64,7 @@ def distance(exl, i, j):
 
 def obj_f(distances:list):
     objective = 0
-    for d in distances[1:]:
+    for d in distances:
         objective += d
     
     return objective
