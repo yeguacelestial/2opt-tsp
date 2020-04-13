@@ -7,14 +7,17 @@
 
 import sys
 import openpyxl
+from itertools import permutations
+from itertools import combinations
 
 def main():
     try:
         filename = sys.argv[1]
         tour = read_tour(filename)
-        best_found(tour)
+        print(best_found(tour))
     except:
         pass
+
 
 def read_tour(filename):
     try:
@@ -34,8 +37,13 @@ def read_tour(filename):
 
 
 def best_found(tour):
-    
-    return
+    comb = combinations(tour, 2)
+    comb_list = list(comb)
+
+    for i in comb_list:
+        print(i)
+
+    return 
 
 
 def first_found(tour):
@@ -51,8 +59,12 @@ def distance(exl, i, j):
 
     # Cell object
     cell_obj = sheet_obj.cell(row = i, column = j)
+    distance_value = cell_obj.value
 
-    return print(cell_obj.value)
+
+
+    return distance_value
+
 
 if __name__ == '__main__':
     main()
