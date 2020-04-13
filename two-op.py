@@ -12,9 +12,11 @@ from itertools import combinations
 
 def main():
     try:
-        filename = sys.argv[1]
-        tour = read_tour(filename)
-        print(best_found(tour))
+        tour_file = sys.argv[1]
+        tour = read_tour(tour_file)
+        matrix_xl_file = sys.argv[2]
+        print(best_found(tour, matrix_xl_file))
+
     except:
         pass
 
@@ -38,11 +40,16 @@ def read_tour(filename):
         print("[-] Couldn't read file.")
 
 
-def best_found(tour):
+def best_found(tour, exl):
     list_of_combinations = get_combinations(tour)
-    filtered = filter_combinations(list_of_combinations)
+    filtered_combs = filter_combinations(list_of_combinations)
+    distances = []
 
-    return filtered
+    for comb in filtered_combs:
+        d = distance(exl, comb[0], comb[1])
+        distances.append(d)
+    
+    return distances
 
 
 def first_found(tour):
@@ -58,6 +65,10 @@ def distance(exl, i, j):
 
     # Cell object
     cell_obj = sheet_obj.cell(row = i, column = j)
+
+    if cell_obj.value == None:
+        cell_obj = sheet_obj.cell(row = j, column = i)
+
     distance_value = cell_obj.value
 
     return distance_value
@@ -102,7 +113,7 @@ def filter_combinations(combinations):
 
     last_combination = (max_index, first_index)
     filtered_combs.append(last_combination)
-    
+
     return filtered_combs
 
 
