@@ -25,25 +25,23 @@ def read_tour(filename):
 
         with open(f'{filename}', 'r') as f:
             line = list(f.read())
+
             for c in line:
                 try:
                     tour.append(int(c))
                 except:
                     pass
-            print(tour)
+
             return tour
+            
     except:
         print("[-] Couldn't read file.")
 
 
 def best_found(tour):
-    comb = combinations(tour, 2)
-    comb_list = list(comb)
+    list_of_combinations = get_combitations(tour)
 
-    for i in comb_list:
-        print(i)
-
-    return 
+    return list_of_combinations
 
 
 def first_found(tour):
@@ -61,9 +59,22 @@ def distance(exl, i, j):
     cell_obj = sheet_obj.cell(row = i, column = j)
     distance_value = cell_obj.value
 
-
-
     return distance_value
+
+
+def obj_f(distances:list):
+    objective = 0
+    for d in distances[1:]:
+        objective += d
+    
+    return objective
+
+
+def get_combitations(tour):
+    comb = combinations(tour, 2)
+    comb_list = list(comb)
+
+    return comb_list
 
 
 if __name__ == '__main__':
