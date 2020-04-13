@@ -11,12 +11,12 @@ import openpyxl
 def main():
     try:
         filename = sys.argv[1]
-        tour = read_file(filename)
+        tour = read_tour(filename)
         best_found(tour)
     except:
         pass
 
-def read_file(filename):
+def read_tour(filename):
     try:
         tour = []
 
