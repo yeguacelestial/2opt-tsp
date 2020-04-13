@@ -39,9 +39,10 @@ def read_tour(filename):
 
 
 def best_found(tour):
-    list_of_combinations = get_combitations(tour)
+    list_of_combinations = get_combinations(tour)
+    filtered = filter_combinations(list_of_combinations)
 
-    return list_of_combinations
+    return filtered
 
 
 def first_found(tour):
@@ -70,11 +71,39 @@ def obj_f(distances:list):
     return objective
 
 
-def get_combitations(tour):
+def get_combinations(tour):
     comb = combinations(tour, 2)
     comb_list = list(comb)
 
     return comb_list
+
+
+def filter_combinations(combinations):
+    comb_copy = combinations
+    first_index_list = []
+    filtered_combs = []
+
+    # Add all combinations
+    for comb in comb_copy:
+        if comb[0] not in first_index_list:
+            filtered_combs.append(comb)
+            first_index_list.append(comb[0])
+
+        else:
+            pass
+    
+    # Add last combination
+    last_index_list = []
+    for comb in comb_copy:
+        last_index_list.append(comb[1])
+    
+    max_index = max(last_index_list)
+    first_index = first_index_list[0]
+
+    last_combination = (max_index, first_index)
+    filtered_combs.append(last_combination)
+    
+    return filtered_combs
 
 
 if __name__ == '__main__':
