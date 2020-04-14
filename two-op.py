@@ -20,7 +20,7 @@ def main():
         # b) First Found strategy
 
     except Exception as e:
-        print(e)
+        raise
 
 
 def read_tour(filename):
@@ -71,33 +71,63 @@ def best_found(tour, exl):
     objective_function = obj_f(distances)
 
     output_str += f'\nCurrent f(T) = {objective_function}\n'
-    
-    output_str += f'\n**AVAILABLE EDGES**\n'
-    for edge in edges:
-        a = edge
-        output_str += f'*a = {a}\n'
-
-        edges_nonadj = []
-        for e in edges:
-            if (e[0] not in a) and (e[1] not in a):
-                edges_nonadj.append(e)
-            else:
-                pass
-        output_str += f'NON-ADJACENT EDGES: {edges_nonadj}\n'
-
     print(output_str)
-    # for edge in edges_nonadj:
-    return objective_function
+    
+    # 2-OPT algorithm
+    two_opt_bf(tour, edges)
+
+    return
 
 
 def first_found(tour):
     return
 
 
-def two_opt(tour:list, a:tuple, b:tuple):
+def two_opt_bf(tour, edges):
     # TODO:
     # Remove NON-ADJACENT EDGES (a[0],a[1]) and (b[0],b[1]) from 'tour' and replace them with edges (a[0],b[0]) and (a[1],b[1])
+    output_str = f'\n**AVAILABLE EDGES**\n'
+    for edge in edges:
+        a = edge
+        output_str += f'\n*a = {a}\n'
+        output_str += f'T = {tour}\n'
+        edges_nonadj = []
+        for e in edges:
+            print(a)
+            if (e[0] not in a) and (e[1] not in a):
+                edges_nonadj.append(e)
+            else:
+                pass
+        output_str += f'NON-ADJACENT EDGES: {edges_nonadj}\n'
+
+        for na_edge in edges_nonadj:
+            # Move(edge, na_edge) => new Tour
+            new_tour = two_opt(tour, edge, na_edge)
+            output_str += f'Move({edge},{na_edge}) => {new_tour} \n'
+
+    print(output_str)
+
     return
+
+
+def two_opt(tour:list, edge_a:tuple, edge_b:tuple):
+    new_tour = tour.copy()
+    for index, c in enumerate(new_tour):
+        i = edge_a[0]
+        j = edge_a[1]
+        k = edge_b[0]
+        l = edge_b[1]
+
+        if c == i:
+            new_tour[index] = i
+        elif c == j:
+            new_tour[index] = k
+        elif c == k:
+            new_tour[index] = j
+        elif c == l:
+            new_tour[index] = l
+
+    return new_tour
 
 
 def distance(exl, i, j):
