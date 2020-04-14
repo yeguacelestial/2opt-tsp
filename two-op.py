@@ -45,36 +45,16 @@ def read_tour(filename):
 def best_found(tour, exl):
     output_str = "\na) BEST FOUND TRATEGY IN 2-OPT\n"
     output_str += f'T = {tour}\n'
-
+    print (output_str)
+    
     list_of_combinations = get_combinations(tour)
     edges = combinations_to_edges(list_of_combinations)
-    distances = []
 
-    for comb in edges:
-        d = distance(exl, comb[0], comb[1])
-        distances.append(d)
-    
-    output_str += f'Current f(T) = '
-    for comb in edges:
-        if comb == edges[-1]:
-            output_str += f'd({comb[0]},{comb[1]})'
-        else:
-            output_str += f' d({comb[0]},{comb[1]}) + '
-
-    output_str += f'\nCurrent f(T) = '
-    for d in distances:
-        if d == distances[-1]:
-            output_str += f'{d}'
-        else:
-            output_str += f'{d} + '
-
-    objective_function = obj_f(distances)
-
-    output_str += f'\nCurrent f(T) = {objective_function}\n'
-    print(output_str)
+    # Compute current objective function
+    current_objective(tour, exl)
     
     # 2-OPT algorithm
-    two_opt_bf(tour, edges)
+    two_opt_bf(tour)
 
     return
 
@@ -83,9 +63,10 @@ def first_found(tour):
     return
 
 
-def two_opt_bf(tour, edges):
-    # TODO:
-    # Remove NON-ADJACENT EDGES (a[0],a[1]) and (b[0],b[1]) from 'tour' and replace them with edges (a[0],b[0]) and (a[1],b[1])
+def two_opt_bf(tour):
+    list_of_combinations = get_combinations(tour)
+    edges = combinations_to_edges(list_of_combinations)
+
     output_str = f'\n**AVAILABLE EDGES**\n'
     for edge in edges:
         a = edge
@@ -93,7 +74,6 @@ def two_opt_bf(tour, edges):
         output_str += f'T = {tour}\n'
         edges_nonadj = []
         for e in edges:
-            print(a)
             if (e[0] not in a) and (e[1] not in a):
                 edges_nonadj.append(e)
             else:
@@ -104,6 +84,8 @@ def two_opt_bf(tour, edges):
             # Move(edge, na_edge) => new Tour
             new_tour = two_opt(tour, edge, na_edge)
             output_str += f'Move({edge},{na_edge}) => {new_tour} \n'
+
+            # TODO: Compute f(T) for each tour
 
     print(output_str)
 
@@ -154,6 +136,38 @@ def obj_f(distances:list):
         objective += d
     
     return objective
+
+
+def current_objective(tour, exl):
+    list_of_combinations = get_combinations(tour)
+    edges = combinations_to_edges(list_of_combinations)
+    distances = []
+
+    for comb in edges:
+        d = distance(exl, comb[0], comb[1])
+        distances.append(d)
+    
+    output_str = f'f(T) = '
+    for comb in edges:
+        if comb == edges[-1]:
+            output_str += f'd({comb[0]},{comb[1]})'
+        else:
+            output_str += f' d({comb[0]},{comb[1]}) + '
+
+    output_str += f'\nf(T) = '
+    for d in distances:
+        if d == distances[-1]:
+            output_str += f'{d}'
+        else:
+            output_str += f'{d} + '
+
+    objective_function = obj_f(distances)
+
+    output_str += f'\nf(T) = {objective_function}\n'
+
+    print(output_str)
+
+    return objective_function
 
 
 def get_combinations(tour):
