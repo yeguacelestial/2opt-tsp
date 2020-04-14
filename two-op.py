@@ -1,8 +1,6 @@
 # 2-OP Heuristic
 # a) Best Found Strategy
-#    1. Read tour -> T
-#    2. Compute f(T) of current T
-#    3. 
+# 
 # b) First Found Strategy
 
 import sys
@@ -15,7 +13,11 @@ def main():
         tour_file = sys.argv[1]
         tour = read_tour(tour_file)
         matrix_xl_file = sys.argv[2]
-        print(best_found(tour, matrix_xl_file))
+
+        # a) Best Found Strategy
+        best_found(tour, matrix_xl_file)
+
+        # b) First Found strategy
 
     except:
         pass
@@ -41,6 +43,9 @@ def read_tour(filename):
 
 
 def best_found(tour, exl):
+    output_str = "\na) BEST FOUND TRATEGY IN 2-OPT\n"
+    output_str += f'T = {tour}\n'
+
     list_of_combinations = get_combinations(tour)
     filtered_combs = filter_combinations(list_of_combinations)
     distances = []
@@ -49,10 +54,33 @@ def best_found(tour, exl):
         d = distance(exl, comb[0], comb[1])
         distances.append(d)
     
-    return distances
+    output_str += f'Current f(T) = '
+    for comb in filtered_combs:
+        if comb == filtered_combs[-1]:
+            output_str += f'd({comb[0]},{comb[1]})'
+        else:
+            output_str += f' d({comb[0]},{comb[1]}) + '
+
+    output_str += f'\nCurrent f(T) = '
+    for d in distances:
+        if d == distances[-1]:
+            output_str += f'{d}'
+        else:
+            output_str += f'{d} + '
+
+    objective_function = obj_f(distances)
+
+    output_str += f'\nCurrent f(T) = {objective_function}'
+    print(output_str)
+
+    return objective_function
 
 
 def first_found(tour):
+    return
+
+
+def two_opt(a, b):
     return
 
 
