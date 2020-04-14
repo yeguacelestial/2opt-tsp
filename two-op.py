@@ -123,7 +123,7 @@ def two_opt_bf(tour, exl):
     elif min_obj_f >= cur_obj_f:
         print("\n\n**LOCAL BEST SOLUTION**")
         print(f"*f(x) = {cur_obj_f}")
-        print(f"**TOUR = {min_obj_f_tour}")    
+        print(f"**TOUR = {tour}")    
     return
 
 
