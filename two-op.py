@@ -69,6 +69,7 @@ def two_opt_bf(tour, exl):
     edges = combinations_to_edges(list_of_combinations)
 
     output_str = f'\n**AVAILABLE EDGES**\n'
+    obj_f_list = []
     for edge in edges:
         a = edge
         output_str += f'\n*a = {a}\n'
@@ -86,11 +87,12 @@ def two_opt_bf(tour, exl):
             new_tour = two_opt(tour, edge, na_edge)
             objective_function = current_objective(new_tour, exl)
             output_str += f'Move({edge},{na_edge}) => {new_tour} => f(T) = {objective_function}\n'
+            obj_f_list.append(objective_function)
 
-            # TODO: Compute f(T) for each tour
+    min_obj_f = min(obj_f_list)
+    output_str += f"\n**LOWEST OBJECTIVE FUNCTION: {min_obj_f}"
 
     print(output_str)
-
     return
 
 
