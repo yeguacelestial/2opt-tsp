@@ -47,16 +47,16 @@ def best_found(tour, exl):
     output_str += f'T = {tour}\n'
 
     list_of_combinations = get_combinations(tour)
-    filtered_combs = filter_combinations(list_of_combinations)
+    edges = combinations_to_edges(list_of_combinations)
     distances = []
 
-    for comb in filtered_combs:
+    for comb in edges:
         d = distance(exl, comb[0], comb[1])
         distances.append(d)
     
     output_str += f'Current f(T) = '
-    for comb in filtered_combs:
-        if comb == filtered_combs[-1]:
+    for comb in edges:
+        if comb == edges[-1]:
             output_str += f'd({comb[0]},{comb[1]})'
         else:
             output_str += f' d({comb[0]},{comb[1]}) + '
@@ -72,6 +72,18 @@ def best_found(tour, exl):
 
     output_str += f'\nCurrent f(T) = {objective_function}'
     print(output_str)
+
+    a = edges[0]
+    print(f'a = {a}')
+
+    edges_nonadj = []
+    for e in edges:
+        if (e[0] not in a) and (e[1] not in a):
+            edges_nonadj.append(e)
+        else:
+            pass
+    
+    print(edges_nonadj)
 
     return objective_function
 
@@ -117,15 +129,15 @@ def get_combinations(tour):
     return comb_list
 
 
-def filter_combinations(combinations):
+def combinations_to_edges(combinations):
     comb_copy = combinations
     first_index_list = []
-    filtered_combs = []
+    edges = []
 
     # Add all combinations
     for comb in comb_copy:
         if comb[0] not in first_index_list:
-            filtered_combs.append(comb)
+            edges.append(comb)
             first_index_list.append(comb[0])
 
         else:
@@ -140,9 +152,9 @@ def filter_combinations(combinations):
     first_index = first_index_list[0]
 
     last_combination = (max_index, first_index)
-    filtered_combs.append(last_combination)
+    edges.append(last_combination)
 
-    return filtered_combs
+    return edges
 
 
 if __name__ == '__main__':
