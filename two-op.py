@@ -1,6 +1,11 @@
 # 2-OP Heuristic
+# TODO: Export all steps by step of a)
 # a) Best Found Strategy
-# 
+#    1. Generate Neighborhood of all possible solutions => N(X)
+#    2. Evaluate ALL Objective Functions on each of the neighbors on N(X) => f(Y) for each Y in N(X)
+#    3. y* = arg min f(Y)
+#    4. If f(Y*) < f(X), MOVE to Y* (Better said: update Tour to Y*), and go to Step 1
+#    5. Else If f(Y*) >= f(X), STOP
 # b) First Found Strategy
 
 import sys
@@ -43,8 +48,8 @@ def read_tour(filename):
 
 
 def best_found(tour, exl):
-    output_str = "\na) BEST FOUND TRATEGY IN 2-OPT\n"
-    output_str += f'T = {tour}\n'
+    # output_str = "\na) BEST FOUND TRATEGY IN 2-OPT\n"
+    output_str = f'T = {tour}\n'
 
     list_of_combinations = get_combinations(tour)
     edges = combinations_to_edges(list_of_combinations)
@@ -67,10 +72,12 @@ def first_found(tour):
 def two_opt_bf(tour, exl):
     list_of_combinations = get_combinations(tour)
     edges = combinations_to_edges(list_of_combinations)
+    cur_obj_f = current_objective(tour, exl)
 
     output_str = f'\n**AVAILABLE EDGES**\n'
     obj_f_list = []
     moves_dict = {}
+    tours_dict = {}
     for edge in edges:
         a = edge
         output_str += f'\n*a = {a}\n'
@@ -89,19 +96,34 @@ def two_opt_bf(tour, exl):
             new_tour = two_opt(tour, edge, na_edge)
             objective_function = current_objective(new_tour, exl)
             output_str += f'Move({edge},{na_edge}) => {new_tour} => f(T) = {objective_function}\n'
+
             moves_dict.update([((edge, na_edge), objective_function)])
+            tours_dict.update([(tuple(new_tour), objective_function)])
             obj_f_list.append(objective_function)
 
     min_obj_f = min(obj_f_list)
     output_str += f"\n**MIN OBJECTIVE FUNCTION => {min_obj_f}\n"
+
     min_obj_f_moves = get_key(min_obj_f, moves_dict)
     output_str += f'**MOVE OF THE MIN OBJECTIVE FUNCTION => {min_obj_f_moves}\n'
-    a = min_obj_f_moves[0]
-    b = min_obj_f_moves[1]
 
-    deltaT = compute_delta(a, b, exl)
-    output_str += f'DeltaT = {deltaT}\n'
-    print(output_str)
+    # a = min_obj_f_moves[0]
+    # b = min_obj_f_moves[1]
+    # deltaT = compute_delta(a, b, exl)
+    # output_str += f'DeltaT = {deltaT}\n'
+
+    min_obj_f_tour = list(get_key(min_obj_f, tours_dict))
+    output_str += f'**TOUR OF THE MIN OBJECTIVE FUNCTION => {min_obj_f_tour}\n\n'
+
+    if min_obj_f < cur_obj_f:
+        output_str += f'{min_obj_f} is better than {cur_obj_f}. Updating T...\n'
+        tour = min_obj_f_tour.copy()
+        output_str += f"T = {tour}"
+        best_found(tour, exl)
+
+    elif min_obj_f >= cur_obj_f:
+        output_str += f"{min_obj_f} is the best solution found.\n"
+
     return
 
 
@@ -178,7 +200,7 @@ def current_objective(tour, exl):
 
     output_str += f'\nf(T) = {objective_function}\n'
 
-    #print(output_str)
+    print(output_str)
 
     return objective_function
 
@@ -196,7 +218,7 @@ def compute_delta(a,b, exl):
     k = b[0]
     l = b[1]
 
-    delta = distance(exl, i, k) + distance(exl, j, l) - (distance(exl, i, j) + distance(exl, k, l))
+    delta = (distance(exl, i, k) + distance(exl, j, l)) - (distance(exl, i, j) + distance(exl, k, l))
 
     return delta
 
