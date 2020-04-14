@@ -70,11 +70,13 @@ def two_opt_bf(tour, exl):
 
     output_str = f'\n**AVAILABLE EDGES**\n'
     obj_f_list = []
+    moves_dict = {}
     for edge in edges:
         a = edge
         output_str += f'\n*a = {a}\n'
         output_str += f'T = {tour}\n'
         edges_nonadj = []
+        
         for e in edges:
             if (e[0] not in a) and (e[1] not in a):
                 edges_nonadj.append(e)
@@ -87,11 +89,18 @@ def two_opt_bf(tour, exl):
             new_tour = two_opt(tour, edge, na_edge)
             objective_function = current_objective(new_tour, exl)
             output_str += f'Move({edge},{na_edge}) => {new_tour} => f(T) = {objective_function}\n'
+            moves_dict.update([((edge, na_edge), objective_function)])
             obj_f_list.append(objective_function)
 
     min_obj_f = min(obj_f_list)
-    output_str += f"\n**LOWEST OBJECTIVE FUNCTION: {min_obj_f}"
+    output_str += f"\n**MIN OBJECTIVE FUNCTION => {min_obj_f}\n"
+    min_obj_f_moves = get_key(min_obj_f, moves_dict)
+    output_str += f'**MOVE OF THE MIN OBJECTIVE FUNCTION => {min_obj_f_moves}\n'
+    a = min_obj_f_moves[0]
+    b = min_obj_f_moves[1]
 
+    deltaT = compute_delta(a, b, exl)
+    output_str += f'DeltaT = {deltaT}\n'
     print(output_str)
     return
 
@@ -172,6 +181,24 @@ def current_objective(tour, exl):
     #print(output_str)
 
     return objective_function
+
+
+def get_key(value, dict):
+    for k, v in dict.items():
+        if value == v:
+            return k
+
+    return "Key doesn't exist"
+
+def compute_delta(a,b, exl):
+    i = a[0]
+    j = a[1]
+    k = b[0]
+    l = b[1]
+
+    delta = distance(exl, i, k) + distance(exl, j, l) - (distance(exl, i, j) + distance(exl, k, l))
+
+    return delta
 
 
 def get_combinations(tour):
