@@ -74,14 +74,14 @@ def two_opt_bf(tour, exl):
     edges = combinations_to_edges(list_of_combinations)
     cur_obj_f = current_objective(tour, exl)
 
-    output_str = f'\n**AVAILABLE EDGES**\n'
+    print(f'\n**AVAILABLE EDGES**')
     obj_f_list = []
     moves_dict = {}
     tours_dict = {}
     for edge in edges:
         a = edge
-        output_str += f'\n*a = {a}\n'
-        output_str += f'T = {tour}\n'
+        print(f'\n*a = {a}')
+        print(f'T = {tour}')
         edges_nonadj = []
         
         for e in edges:
@@ -89,23 +89,23 @@ def two_opt_bf(tour, exl):
                 edges_nonadj.append(e)
             else:
                 pass
-        output_str += f'NON-ADJACENT EDGES: {edges_nonadj}\n'
+        print(f'NON-ADJACENT EDGES: {edges_nonadj}')
 
         for na_edge in edges_nonadj:
             # Move(edge, na_edge) => new Tour
             new_tour = two_opt(tour, edge, na_edge)
             objective_function = current_objective(new_tour, exl)
-            output_str += f'Move({edge},{na_edge}) => {new_tour} => f(T) = {objective_function}\n'
+            print(f'Move({edge},{na_edge}) => {new_tour} => f(T) = {objective_function}')
 
             moves_dict.update([((edge, na_edge), objective_function)])
             tours_dict.update([(tuple(new_tour), objective_function)])
             obj_f_list.append(objective_function)
 
     min_obj_f = min(obj_f_list)
-    output_str += f"\n**MIN OBJECTIVE FUNCTION => {min_obj_f}\n"
+    print(f"\n**MIN OBJECTIVE FUNCTION => {min_obj_f}")
 
     min_obj_f_moves = get_key(min_obj_f, moves_dict)
-    output_str += f'**MOVE OF THE MIN OBJECTIVE FUNCTION => {min_obj_f_moves}\n'
+    print(f'**MOVE OF THE MIN OBJECTIVE FUNCTION => {min_obj_f_moves}')
 
     # a = min_obj_f_moves[0]
     # b = min_obj_f_moves[1]
@@ -113,17 +113,17 @@ def two_opt_bf(tour, exl):
     # output_str += f'DeltaT = {deltaT}\n'
 
     min_obj_f_tour = list(get_key(min_obj_f, tours_dict))
-    output_str += f'**TOUR OF THE MIN OBJECTIVE FUNCTION => {min_obj_f_tour}\n\n'
+    print(f'**TOUR OF THE MIN OBJECTIVE FUNCTION => {min_obj_f_tour}')
 
     if min_obj_f < cur_obj_f:
-        output_str += f'{min_obj_f} is better than {cur_obj_f}. Updating T...\n'
+        print(f'{min_obj_f} is better than {cur_obj_f}. Updating T...\n')
         tour = min_obj_f_tour.copy()
-        output_str += f"T = {tour}"
         best_found(tour, exl)
 
     elif min_obj_f >= cur_obj_f:
-        output_str += f"{min_obj_f} is the best solution found.\n"
-
+        print("\n\n**LOCAL BEST SOLUTION**")
+        print(f"*f(x) = {cur_obj_f}")
+        print(f"**TOUR = {min_obj_f_tour}")    
     return
 
 
@@ -199,8 +199,6 @@ def current_objective(tour, exl):
     objective_function = obj_f(distances)
 
     output_str += f'\nf(T) = {objective_function}\n'
-
-    print(output_str)
 
     return objective_function
 
