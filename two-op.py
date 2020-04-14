@@ -45,16 +45,17 @@ def read_tour(filename):
 def best_found(tour, exl):
     output_str = "\na) BEST FOUND TRATEGY IN 2-OPT\n"
     output_str += f'T = {tour}\n'
-    print (output_str)
-    
+
     list_of_combinations = get_combinations(tour)
     edges = combinations_to_edges(list_of_combinations)
 
     # Compute current objective function
-    current_objective(tour, exl)
+    current_obj = current_objective(tour, exl)
+    output_str += f'Current f(T) = {current_obj}'
+    print (output_str)
     
     # 2-OPT algorithm
-    two_opt_bf(tour)
+    two_opt_bf(tour, exl)
 
     return
 
@@ -63,7 +64,7 @@ def first_found(tour):
     return
 
 
-def two_opt_bf(tour):
+def two_opt_bf(tour, exl):
     list_of_combinations = get_combinations(tour)
     edges = combinations_to_edges(list_of_combinations)
 
@@ -83,7 +84,8 @@ def two_opt_bf(tour):
         for na_edge in edges_nonadj:
             # Move(edge, na_edge) => new Tour
             new_tour = two_opt(tour, edge, na_edge)
-            output_str += f'Move({edge},{na_edge}) => {new_tour} \n'
+            objective_function = current_objective(new_tour, exl)
+            output_str += f'Move({edge},{na_edge}) => {new_tour} => f(T) = {objective_function}\n'
 
             # TODO: Compute f(T) for each tour
 
@@ -165,7 +167,7 @@ def current_objective(tour, exl):
 
     output_str += f'\nf(T) = {objective_function}\n'
 
-    print(output_str)
+    #print(output_str)
 
     return objective_function
 
