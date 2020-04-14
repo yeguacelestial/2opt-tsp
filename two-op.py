@@ -19,8 +19,8 @@ def main():
 
         # b) First Found strategy
 
-    except:
-        pass
+    except Exception as e:
+        print(e)
 
 
 def read_tour(filename):
@@ -70,21 +70,23 @@ def best_found(tour, exl):
 
     objective_function = obj_f(distances)
 
-    output_str += f'\nCurrent f(T) = {objective_function}'
-    print(output_str)
-
-    a = edges[0]
-    print(f'a = {a}')
-
-    edges_nonadj = []
-    for e in edges:
-        if (e[0] not in a) and (e[1] not in a):
-            edges_nonadj.append(e)
-        else:
-            pass
+    output_str += f'\nCurrent f(T) = {objective_function}\n'
     
-    print(edges_nonadj)
+    output_str += f'\n**AVAILABLE EDGES**\n'
+    for edge in edges:
+        a = edge
+        output_str += f'*a = {a}\n'
 
+        edges_nonadj = []
+        for e in edges:
+            if (e[0] not in a) and (e[1] not in a):
+                edges_nonadj.append(e)
+            else:
+                pass
+        output_str += f'NON-ADJACENT EDGES: {edges_nonadj}\n'
+
+    print(output_str)
+    # for edge in edges_nonadj:
     return objective_function
 
 
@@ -92,7 +94,9 @@ def first_found(tour):
     return
 
 
-def two_opt(a, b):
+def two_opt(tour:list, a:tuple, b:tuple):
+    # TODO:
+    # Remove NON-ADJACENT EDGES (a[0],a[1]) and (b[0],b[1]) from 'tour' and replace them with edges (a[0],b[0]) and (a[1],b[1])
     return
 
 
